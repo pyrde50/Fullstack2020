@@ -1,12 +1,47 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
+const Button = (props) => {
+  return <button onClick={props.onClick}>{props.text}</button>
+}
+
+const changeVote = (points, selected, changeVotes) => {
+  const copy = [...points]
+  copy[selected] += 1
+  changeVotes(copy)
+}
+
+const max = (points) => {
+  return  Math.max.apply(Math, points)
+}
+
+const maxPlace = (points) => {
+  const aa = Math.max.apply(Math, points)
+  return points.findIndex(obj => obj === aa)
+}
+
 const App = (props) => {
   const [selected, setSelected] = useState(0)
+  const [points, changeVotes] = useState(Array.apply(null, new Array(6)).map(Number.prototype.valueOf, 0))
+
+
+  
 
   return (
-    <div>
+    <div><h1>Anecdote of the day</h1>
       {props.anecdotes[selected]}
+      <div> 
+      <div>
+      has {points[selected]} votes
+      </div>
+      <Button text="next anecdote" onClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))}/>
+      <Button text="vote" onClick={() => changeVote(points, selected, changeVotes)}/>
+      </div>
+      <h1>Anecdote with the most votes</h1>
+      <div>
+        {props.anecdotes[maxPlace(points)]}
+      </div>
+      <div>has {max(points)} votes</div>
     </div>
   )
 }
