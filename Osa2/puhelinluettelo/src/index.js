@@ -7,7 +7,7 @@ import Person from './components/person'
 import { valueToNode } from '@babel/types'
 
 const App = () => {
-  const [ persons, setPersons] = useState([]) 
+  const [ persons, setPersons] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ findName, setFindName ] = useState('')
@@ -27,7 +27,7 @@ const App = () => {
       setNewNumber('')
     }
   }
-  
+
   useEffect(() => {
     console.log('useEffect')
     axios.get('http://localhost:3001/persons')
@@ -44,13 +44,13 @@ const App = () => {
   const editNewNumber = (event) => {
     setNewNumber(event.target.value)
   }
-  
+
   const editFindName = (event) => {
     setFindName(event.target.value)
   }
   const filterPeople = findName.length === 0
   ? persons
-  : persons.filter(person => person.name.toLowerCase().includes(findName) === true)
+  : persons.filter(person => person.name.toLowerCase().includes(findName.toLowerCase()) === true)
 
   return (
     <div>
