@@ -6,7 +6,7 @@ import ShowCountries from './components/showCountry'
 
 const App = () => {
   const [possibleCountries, setPossibleCountries] = useState([])
-  const [searchCountries, setSearchCountries] = useState('')
+  const [searchCountries, setSearchCountries] = useState('finl')
 
   useEffect(() => {
     console.log('useEffect')
