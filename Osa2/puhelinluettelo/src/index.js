@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 import AddPerson from './components/addPerson'
 import FilterPersons from './components/filter'
+import Notification from './notification'
+import ErrorNotification from './errorNotification'
 import Person from './components/person'
 import getPerson from './services/getPerson'
 
@@ -11,6 +13,8 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ findName, setFindName ] = useState('')
   const [ number, setNumber ] = useState(8)
+  const [ message, setMessage ] = useState(null)
+  const [ errorMessage, setErrorMessage ] = useState(null)
 
 
   const addPerson = (event) => {
@@ -28,6 +32,10 @@ const App = () => {
         .then(response => {
           setPersons(persons.filter(person => person.id !== response.data.id).concat(personObject))
           console.log(response.data)
+          setMessage(`${response.data.name} number changed to ${response.data.number}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 4000)
         })
       }
     } else {
@@ -43,6 +51,11 @@ const App = () => {
           setPersons(persons.concat(response.data))
           setNewName('')
           setNewNumber('')
+          setMessage(`${response.data.name} added`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 4000)
+
       })
     }
   }
@@ -79,8 +92,19 @@ const App = () => {
         console.log(response.data)
         setPersons(persons.filter(person => person.id !== response.data.id))
         console.log(persons)
+        setMessage(`${response.data.name} deleted`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 4000)
     })
   }
+    })
+    .catch(error => {
+      const nameOfDeleted = persons.filter(person => person.id == event.target.value)[0].name
+      setErrorMessage(`information of ${nameOfDeleted} has already been removed from server`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 7000)
     })
   }
 
@@ -91,6 +115,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message}/>
+      <ErrorNotification errorMessage={errorMessage}/>
       <FilterPersons findName = {findName} editFindName = {editFindName}/>
       <h2>add new</h2>
       <AddPerson newName = {newName} editnewName ={editnewName} newNumber = {newNumber} editNewNumber={editNewNumber} addPerson = {addPerson}/>
