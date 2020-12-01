@@ -1,39 +1,58 @@
 import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
-import axios from 'axios'
 import AddPerson from './components/addPerson'
 import FilterPersons from './components/filter'
 import Person from './components/person'
-import { valueToNode } from '@babel/types'
+import getPerson from './services/getPerson'
 
 const App = () => {
   const [ persons, setPersons] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ findName, setFindName ] = useState('')
+  const [ number, setNumber ] = useState(8)
 
 
   const addPerson = (event) => {
     event.preventDefault()
-    const personObject = {
-      name: newName,
-      number: newNumber
-    }
+
     if(persons.some(item => item.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const personObject = {
+          name: newName,
+          number: newNumber,
+          id: persons.filter(person => person.name === newName)[0].id
+        }
+        getPerson
+        .changeNumber(personObject)
+        .then(response => {
+          setPersons(persons.filter(person => person.id !== response.data.id).concat(personObject))
+          console.log(response.data)
+        })
+      }
     } else {
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
+      const personObject = {
+        name: newName,
+        number: newNumber,
+        id: number + 1
+      }
+      getPerson
+      .Add(personObject)
+        .then(response => {
+          console.log(response)
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+      })
     }
   }
 
   useEffect(() => {
-    console.log('useEffect')
-    axios.get('http://localhost:3001/persons')
+    getPerson
+    .getAll()
       .then(response => {
-        console.log(response)
         setPersons(response.data)
+        setNumber(response.data.id)
       })
   },[])
 
@@ -48,6 +67,23 @@ const App = () => {
   const editFindName = (event) => {
     setFindName(event.target.value)
   }
+
+  const DeletePerson = (event) => {
+    getPerson
+    .Get(event.target.value)
+    .then(response => {
+      if (window.confirm(`Delete ${response.data.name}?`)) {
+      getPerson
+      .Delete(response.data)
+      .then(res => {
+        console.log(response.data)
+        setPersons(persons.filter(person => person.id !== response.data.id))
+        console.log(persons)
+    })
+  }
+    })
+  }
+
   const filterPeople = findName.length === 0
   ? persons
   : persons.filter(person => person.name.toLowerCase().includes(findName.toLowerCase()) === true)
@@ -59,7 +95,7 @@ const App = () => {
       <h2>add new</h2>
       <AddPerson newName = {newName} editnewName ={editnewName} newNumber = {newNumber} editNewNumber={editNewNumber} addPerson = {addPerson}/>
       <h2>Numbers</h2>
-      <Person filterPeople={filterPeople}/>
+      <Person filterPeople={filterPeople} DeletePerson={DeletePerson}/>
 
     </div>
   )
