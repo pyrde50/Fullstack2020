@@ -100,7 +100,8 @@ const App = () => {
   }
     })
     .catch(error => {
-      const nameOfDeleted = persons.filter(person => person.id == event.target.value)[0].name
+      console.log(event.target.value)
+      const nameOfDeleted = persons.filter(person => person.id === event.target.value)[0].name
       setErrorMessage(`information of ${nameOfDeleted} has already been removed from server`)
           setTimeout(() => {
             setErrorMessage(null)
