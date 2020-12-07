@@ -2,7 +2,7 @@ PUT http://localhost:3001/api/persons/5fcd44be45117d86afec0080
 Content-Type: application/json
 
 {
-    "name": "Petteri324453",
-    "number": "132354314255"
+    "name": "pyyffrdgy",
+    "number": "1234"
 
 }  

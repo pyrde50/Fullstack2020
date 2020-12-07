@@ -48,7 +48,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
     })
 
 
-    app.post(`/api/persons`,(req, res) => {
+    app.post(`/api/persons`,(req, res, next) => {
         const body = req.body
 
         if (!body.name) {
@@ -56,16 +56,14 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
                 error: 'name must be given'
             })
         }
-
         const person = new Person({
             name: body.name,
             number: body.number
         })
-        console.log(person)
         person.save().then(savedPerson => {
             res.json(savedPerson)
         })
-    
+        .catch(error => next(error))
     })
 
     app.put(`/api/persons/:id`,(req, res, next) => {
@@ -81,7 +79,11 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
         .then(updatedPerson => {
             res.json(updatedPerson)
         })
-        .catch(error => next(error))
+        .catch(error => {
+            console.log("aaaaaa", error) 
+            next(error)
+        })
+        
     
     })
 
@@ -96,7 +98,9 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 
         if (error.name === 'CastError') {
             return res.status(400).send({error: "malformatted id"})
-        } 
+        } else if (error.name === 'ValidationError') {
+            return res.status(400).json({ error: error.message })
+          } 
         next(error)
       }
 
