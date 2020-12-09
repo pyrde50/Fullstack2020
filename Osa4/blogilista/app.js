@@ -21,8 +21,8 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true, us
     logger.error('error connecting to MongoDB:', error.message)
   })
 
-  app.use(cors())
-  app.use(express.json())
-  app.use('/api/blogs', blogsRouter)
+app.use(cors())
+app.use(express.json())
+app.use('/api/blogs', blogsRouter)
 
-  module.exports = app
+module.exports = app
