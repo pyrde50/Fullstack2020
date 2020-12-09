@@ -1,11 +1,13 @@
-const config = require('../utils/config')
+const config = require('./utils/config')
 const express = require('express')
 const app = express()
 const cors = require('cors')
-var morgan = require('morgan')
+const blogsRouter = require('./controllers/blogs')
 
+/**var morgan = require('morgan')
 morgan.token('body', (req) => JSON.stringify(req.body))
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))*/
+
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 
@@ -18,5 +20,9 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true, us
   .catch((error) => {
     logger.error('error connecting to MongoDB:', error.message)
   })
+
+  app.use(cors())
+  app.use(express.json())
+  app.use('/api/blogs', blogsRouter)
 
   module.exports = app

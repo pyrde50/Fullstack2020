@@ -2,9 +2,9 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "hyvä!!!!",
-    "author": "säääw",
-    "url": "joku2s34",
+    "title": "hyv!!!!!",
+    "author": "sääds",
+    "url": "jok34",
     "likes": -100
 
 }  
