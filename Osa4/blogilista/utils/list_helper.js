@@ -1,4 +1,5 @@
 
+// eslint-disable-next-line no-unused-vars
 const dummy = (blogs) => {
   return 1
 }
@@ -72,9 +73,7 @@ const mostLikes = (blogs) => {
           likes: blogs.filter((blog) => blog.author === author).map((blog) => blog.likes).reduce(function(a,b) {return a + b})
         })
       })
-      console.log('notsorted', authorsWLikes)
       const sorted = authorsWLikes.sort((a,b) => b.likes - a.likes)
-      console.log('sorted', sorted)
       return sorted[0]
     }
   }

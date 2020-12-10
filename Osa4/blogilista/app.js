@@ -1,8 +1,10 @@
 const config = require('./utils/config')
 const express = require('express')
+require('express-async-errors')
 const app = express()
 const cors = require('cors')
 const blogsRouter = require('./controllers/blogs')
+const middleware = require('./utils/middleware')
 
 /**var morgan = require('morgan')
 morgan.token('body', (req) => JSON.stringify(req.body))
@@ -24,5 +26,7 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true, us
 app.use(cors())
 app.use(express.json())
 app.use('/api/blogs', blogsRouter)
+app.use(middleware.unknownEndpoint)
+app.use(middleware.errorHandler)
 
 module.exports = app
