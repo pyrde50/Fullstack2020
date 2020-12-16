@@ -1,9 +1,11 @@
 POST http://localhost:3003/api/blogs/
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InB5cnkiLCJpZCI6IjVmZDlmZGQzNTNjNzE4M2Q4OGEzN2VjNCIsImlhdCI6MTYwODEyMTgyMn0.koWPWFG26APAbEEMfjJ1Bwe76CiFL5rR-rzooyDGuaA
+
 
 {
-    "title" : "miksi tämä ei toimi",
-    "author" : "joku .",
-    "url" : "wwwwwwwww.fi",
-    "likes" : 10
-}  
+  "title": "tämä",
+  "author": "tämä", 
+  "url": "tämä",
+  "user": "5fd9fdd353c7183d88a37ec4"
+} 
