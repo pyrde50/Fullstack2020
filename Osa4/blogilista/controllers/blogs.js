@@ -11,26 +11,30 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs.map(blog => blog.toJSON()))
 })
 
-blogsRouter.post('/', async (request, response) => {
+blogsRouter.post('/', async (request, response, next) => {
   const body = request.body
-  const token = request.token
-  const decodedToken = jwt.verify(token, process.env.SECRET)
-  if (!token || !decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' })
-  }
+  try {
+    const token = request.token
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!token || !decodedToken.id) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
 
-  const user = await User.findById(decodedToken.id)
-  const blog = new Blog({
-    title: body.title,
-    author: body.author,
-    url: body.url,
-    likes: body.likes,
-    user: user._id
-  })
-  const savedBlog = await blog.save()
-  user.blogs = user.blogs.concat(savedBlog)
-  await user.save()
-  response.status(201).json(savedBlog.toJSON())
+    const user = await User.findById(decodedToken.id)
+    const blog = new Blog({
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      likes: body.likes,
+      user: user._id
+    })
+    const savedBlog = await blog.save()
+    user.blogs = user.blogs.concat(savedBlog)
+    await user.save()
+    response.status(201).json(savedBlog.toJSON())
+  } catch (e) {
+    next(e)
+  }
 })
 
 blogsRouter.delete('/:id', async (request, response) => {

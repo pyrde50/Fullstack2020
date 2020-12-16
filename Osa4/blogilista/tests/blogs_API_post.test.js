@@ -101,6 +101,14 @@ test('get 400 when no title', async() => {
     .expect(400)
 })
 
+test ('401 when no token', async() => {
+  await api
+    .post('/api/blogs')
+    .set('Authorization', 'Bearer ')
+    .send(normal)
+    .expect(401)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
