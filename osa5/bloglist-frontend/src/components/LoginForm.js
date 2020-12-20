@@ -1,12 +1,12 @@
 import React from 'react'
 
 const LoginForm = (props) => (
-    <div>
-        <h2>Login</h2>
+  <div>
+    <h2>Login</h2>
     <form onSubmit={props.handleLogin}>
       <div>
         username
-          <input
+        <input
           type="text"
           value={props.username}
           name="Username"
@@ -15,7 +15,7 @@ const LoginForm = (props) => (
       </div>
       <div>
         password
-          <input
+        <input
           type="password"
           value={props.password}
           name="Password"
@@ -23,8 +23,8 @@ const LoginForm = (props) => (
         />
       </div>
       <button type="submit">login</button>
-    </form>   
-    </div>   
-  )
+    </form>
+  </div>
+)
 
-  export default LoginForm
+export default LoginForm
