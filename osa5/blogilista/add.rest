@@ -1,0 +1,11 @@
+POST http://localhost:3001/api/blogs/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InB5cnJ5IiwiaWQiOiI1ZmRhMzNlNDM1ODA5OTRiMWY1OTM1NTUiLCJpYXQiOjE2MDgxMzU2NjV9.VDeLI_ahzGtk1SB-RnaQrlrEHiF9YVLyXuopmYNJqGI
+
+
+{
+  "title": "testi23",
+  "author": "mävarmaa", 
+  "url": "tämä",
+  "user": "5fda33e43580994b1f593555"
+} 
