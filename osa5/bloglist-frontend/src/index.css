@@ -23,7 +23,7 @@ body {
   }
   
   .error {
-    color: rgb(241, 0, 0);
+    color: rgb(255, 0, 0);
     background: lightgrey;
     font-size: 20px;
     border-style: solid;

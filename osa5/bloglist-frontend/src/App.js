@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import BlogForm from './components/BlogForm'
 import blogs from './services/blogs'
+import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginUser from './services/loginUser'
 import LoginForm from './components/LoginForm'
@@ -22,9 +23,8 @@ const App = () => {
     if (maybeUser !== null) {
       setName(maybeUser.split(',')[2].split('"')[3])
       blogs.setToken(maybeUser.split(',')[0].split('"')[3])
+      setUser(JSON.stringify(maybeUser))
     }
-    setUser(JSON.stringify(maybeUser))
-
 
 
     blogService.getAll().then(blogs =>
@@ -71,6 +71,10 @@ const App = () => {
       {user === null ?
         <LoginForm handleLogin={handleLogin} username={username} password={password} setUsername={setUsername} setPassword={setPassword} /> :
         <BlogForm blogs={blogit} name={name} handleLogout={handleLogout} blogit={blogit} setBlogs={setBlogs} setMessage={setMessage} setErrorMessage={setErrorMessage} />}
+      {blogit !== undefined && user !== null?
+        blogit.sort((a, b) => b.likes - a.likes).map(blog =>
+          <Blog key={blog.id} blog={blog}/>
+        ): null}
     </div>
   )
 

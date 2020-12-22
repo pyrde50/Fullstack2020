@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Blog from './Blog'
 import blogService from '../services/blogs'
 import Togglable from './Togglable'
 
@@ -95,10 +94,6 @@ const BlogForm = (props) => {
       <Togglable buttonLabel='create new Blog'>
         <AddBlogForm addBlog={addBlog} title={title} author={author} url={url} setTitle={setTitle} setURL={setURL} setAuthor={setAuthor}/>
       </Togglable>
-      {props.blogs !== undefined ?
-        props.blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-          <Blog key={blog.id} blog={blog} userID={props.userID} />
-        ): null}
     </div>
   )
 }

@@ -8,10 +8,6 @@ const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 const middleware = require('./utils/middleware')
 
-/**var morgan = require('morgan')
-morgan.token('body', (req) => JSON.stringify(req.body))
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
-*/
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 
@@ -32,6 +28,12 @@ app.use(middleware.tokenExtractor)
 app.use('/api/users', usersRouter)
 app.use('/api/blogs', blogsRouter)
 app.use('/api/login', loginRouter)
+
+if (process.env.NODE_ENV === 'test') {
+  const testingRouter = require('./controllers/testing')
+  app.use('/api/testing', testingRouter)
+}
+
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
