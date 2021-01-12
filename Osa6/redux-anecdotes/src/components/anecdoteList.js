@@ -5,9 +5,9 @@ import  { reset } from '../reducers/notificationReducer'
 
 
 
-const AnecdoteList = (props) => {
-  
-    const dispatch = useDispatch()
+const AnecdoteList = () => {
+
+  const dispatch = useDispatch()
   const anecdotes = useSelector(state => state.anecdote)
   const filter = useSelector(state => state.filter)
 
@@ -17,10 +17,10 @@ const AnecdoteList = (props) => {
       dispatch(reset())
     }, 5000)
   }
-  
+
   return (
-      <div>
-    {anecdotes.filter(anecdote => anecdote.content.includes(filter)).map(anecdote =>
+    <div>
+      {anecdotes.filter(anecdote => anecdote.content.includes(filter)).map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
@@ -31,9 +31,9 @@ const AnecdoteList = (props) => {
           </div>
         </div>
       )}
-      </div>
+    </div>
   )
-  
+
 }
 
 export default AnecdoteList

@@ -1,4 +1,4 @@
-
+/* eslint-disable no-case-declarations */
 
 const anecdotesAtStart = [
   'If it hurts, do it more often',
@@ -38,17 +38,17 @@ const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'VOTE':
-      const anecdote = state.find(anec => anec.id === action.data.id)
-      const addVote = {
-        ...anecdote, votes: anecdote.votes + 1
-      }
-      return state.map(anec => anec.id !== action.data.id ? anec : addVote).sort((a,b) => b.votes - a.votes)
+  case 'VOTE':
+    // eslint-disable-next-line no-case-declarations
+    const anecdote = state.find(anec => anec.id === action.data.id)
+    const addVote = {
+      ...anecdote, votes: anecdote.votes + 1
+    }
+    return state.map(anec => anec.id !== action.data.id ? anec : addVote).sort((a,b) => b.votes - a.votes)
 
-    case 'ADD':
-      const final = state.concat(asObject(action.data.content))
-      return final
-    default: return state
+  case 'ADD':
+    return state.concat(asObject(action.data.content))
+  default: return state
   }
 
 }
