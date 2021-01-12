@@ -1,21 +1,26 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { vote } from './anecdoteReducer'
+import { vote } from '../reducers/anecdoteReducer'
+import  { reset } from '../reducers/notificationReducer'
 
 
 
 const AnecdoteList = (props) => {
-
+  
     const dispatch = useDispatch()
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(state => state.anecdote)
+  const filter = useSelector(state => state.filter)
 
-  const voteAnec = async (id) => {
-    dispatch(vote(id))
+  const voteAnec = (id) => {
+    dispatch(vote(id, anecdotes))
+    setTimeout(() => {
+      dispatch(reset())
+    }, 5000)
   }
   
   return (
       <div>
-    {anecdotes.map(anecdote =>
+    {anecdotes.filter(anecdote => anecdote.content.includes(filter)).map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}

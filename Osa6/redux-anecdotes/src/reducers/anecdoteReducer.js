@@ -1,3 +1,5 @@
+
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -17,10 +19,11 @@ const asObject = (anecdote) => {
   }
 }
 
-export const vote = (id) => {
+export const vote = (id, anecdotes) => {
   return {
     type: 'VOTE',
-    data: { id }
+    data: { id },
+    anecdotes: { anecdotes }
   }
 }
 
@@ -34,8 +37,6 @@ export const createAnecdote = (content) => {
 const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
   switch (action.type) {
     case 'VOTE':
       const anecdote = state.find(anec => anec.id === action.data.id)
