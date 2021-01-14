@@ -1,15 +1,23 @@
-export const reset = () => {
-  return {
-    type: 'RESET'
+export const setNotification = (anecdote, time) => {
+  console.log(anecdote, 'set')
+  return async dispatch => {
+    setTimeout(() => dispatch({
+      type: 'RESET'
+    }), time * 1000)
+
+    dispatch({
+      type: 'NOTIFY',
+      data: { anecdote },
+    })
+
+
   }
 }
 
 const notificationReducer = (state = '', action) => {
   switch (action.type) {
-  case 'VOTE':
-    return `You voted '${action.anecdotes.anecdotes.find(anec => anec.id === action.data.id).content}'`
-  case 'ADD':
-    return `You created '${action.data.content}'`
+  case 'NOTIFY':
+    return action.data.anecdote
   case 'RESET':
     return ''
   default:

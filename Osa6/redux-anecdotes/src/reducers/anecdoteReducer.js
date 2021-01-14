@@ -1,8 +1,5 @@
 import anecdoteService from '../services/anecdoteService'
 
-/* eslint-disable no-case-declarations */
-
-
 const getId = () => (100000 * Math.random()).toFixed(0)
 
 const asObject = (anecdote) => {
@@ -13,25 +10,35 @@ const asObject = (anecdote) => {
   }
 }
 
-export const vote = (id, anecdotes) => {
-  return {
-    type: 'VOTE',
-    data: { id },
-    anecdotes: { anecdotes }
+export const initializeAnecdotes = () => {
+  return async dispatch => {
+    const anecdotes = await anecdoteService.getAll()
+    dispatch ({
+      type: 'INITIALIZE',
+      data: { anecdotes }
+    })
+  }
+}
+
+export const vote = (anecdote, anecdotes) => {
+  return async dispatch => {
+    const liked = anecdotes.find(anec => anec.id === anecdote.id)
+    const final = await anecdoteService.voteAnecdote(liked)
+    dispatch({
+      type: 'VOTE',
+      data: { final },
+      anecdotes: { anecdotes }
+    })
   }
 }
 
 export const createAnecdote = (content) => {
-  return {
-    type: 'ADD',
-    data: { content }
-  }
-}
-
-export const initializeAnecdotes = (content) => {
-  return {
-    type: 'INITIALIZE',
-    data: { content }
+  return async dispatch => {
+    const newAnecdote = await anecdoteService.addAnecdote(asObject(content))
+    dispatch ({
+      type: 'ADD',
+      data: { newAnecdote }
+    })
   }
 }
 
@@ -39,23 +46,13 @@ export const initializeAnecdotes = (content) => {
 const reducer = (state = [], action) => {
   switch (action.type) {
   case 'VOTE':
-    // eslint-disable-next-line no-case-declarations
-    const anecdote = state.find(anec => anec.id === action.data.id)
-    const addVote = {
-      ...anecdote, votes: anecdote.votes + 1
-    }
-    return state.map(anec => anec.id !== action.data.id ? anec : addVote).sort((a,b) => b.votes - a.votes)
-
+    return state.map(anec => anec.id !== action.data.final.id ? anec : action.data.final).sort((a,b) => b.votes - a.votes)
   case 'ADD':
-    const newAnecdote = asObject(action.data.content)
-    anecdoteService
-      .addAnecdote(newAnecdote)
-    return state.concat(newAnecdote)
+    return state.concat(action.data.newAnecdote)
   case 'INITIALIZE':
-    return action.data.content
+    return action.data.anecdotes.sort((a,b) => b.votes - a.votes)
   default: return state
   }
-
 }
 
 export default reducer
