@@ -1,16 +1,24 @@
 export const setNotification = (anecdote, time) => {
-  console.log(anecdote, 'set')
   return async dispatch => {
-    setTimeout(() => dispatch({
-      type: 'RESET'
-    }), time * 1000)
+    dispatch(notify(anecdote))
 
-    dispatch({
-      type: 'NOTIFY',
-      data: { anecdote },
-    })
+    setTimeout(() => {
+      dispatch(reset())
+    } , time * 1000)
 
+  }
+}
 
+const notify = (anecdote) => {
+  return {
+    type: 'NOTIFY',
+    data: { anecdote }
+  }
+}
+
+const reset = () => {
+  return {
+    type: 'RESET'
   }
 }
 
