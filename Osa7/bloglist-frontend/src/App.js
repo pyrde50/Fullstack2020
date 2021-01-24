@@ -9,7 +9,7 @@ import Notification from './components/notification'
 import { useDispatch, useSelector } from 'react-redux'
 import { setErrorNotification } from './reducers/errorNotificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
-import { login, logoutUser } from './reducers/loginReducer'
+import { login, logoutUser } from './reducers/loginReducer'
 
 
 const App = () => {
@@ -26,7 +26,7 @@ const App = () => {
     if (maybeUser !== null) {
       setName(maybeUser.split(',')[2].split('"')[3])
       blogs.setToken(maybeUser.split(',')[0].split('"')[3])
-      dispatch(login(JSON.stringify(maybeUser).split(',')[3].split('"')[3]))
+      dispatch(login(JSON.stringify(maybeUser)))
     }
     dispatch(initializeBlogs())
   }, [])

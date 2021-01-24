@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { likeBlog, deleteBlog } from '../reducers/blogReducer'
 import blogService from '../services/blogs'
 
 const Blog = ({ blog }) => {
@@ -10,11 +12,10 @@ const Blog = ({ blog }) => {
     borderWidth: 1,
     marginBottom: 5
   }
+  const dispatch = useDispatch()
 
   const [isVisible, setVisible] = useState(false)
-  const [likes, setLikes] = useState(blog.likes)
   const [userID, setUserID] = useState('')
-  const [deleted, setDeleted] = useState(false)
 
   const editVisibility = () => {
     setVisible(!isVisible)
@@ -38,11 +39,8 @@ const Blog = ({ blog }) => {
       url: filtered.url,
       id: filtered.id
     }
-    blogService
-      .addLike(blogObject)
-      .then(returnedBlog => {
-        setLikes(returnedBlog.likes)
-      })
+    blogService.addLike(blogObject)
+    dispatch(likeBlog(blogObject))
   }
 
   const Delete = async () => {
@@ -50,7 +48,7 @@ const Blog = ({ blog }) => {
       blogService
         .remove(blog)
 
-      setDeleted(true)
+      dispatch(deleteBlog(blog))
     }
   }
 
@@ -67,24 +65,22 @@ const Blog = ({ blog }) => {
 
 
   return (
-    deleted ? null : (
-      <div>
-        {isVisible ? (
-          <div style={blogStyle}>
-            {blog.title} <button onClick={editVisibility}>hide</button>
-            <div>{blog.url}</div>
-            <div>likes {likes} <button onClick={addLike}>like!</button></div>
-            <div>{blog.author}</div>
-            {userID === blog.user.id && DeleteButton()}
-          </div>
-        ) : (
-          <div style={blogStyle}>
-            {blog.title} {blog.author}
-            <button onClick={editVisibility}>view</button>
-          </div>
-        )}
-      </div>
-    )
+    <div>
+      {isVisible ? (
+        <div style={blogStyle}>
+          {blog.title} <button onClick={editVisibility}>hide</button>
+          <div>{blog.url}</div>
+          <div>likes {blog.likes} <button onClick={addLike}>like!</button></div>
+          <div>{blog.author}</div>
+          {userID === blog.user.id && DeleteButton()}
+        </div>
+      ) : (
+        <div style={blogStyle}>
+          {blog.title} {blog.author}
+          <button onClick={editVisibility}>view</button>
+        </div>
+      )}
+    </div>
   )
 }
 
