@@ -1,4 +1,4 @@
-export const login = (user) => {
+export const loginUseri = (user) => {
   return async dispatch => {
     dispatch({
       type: 'LOGIN',

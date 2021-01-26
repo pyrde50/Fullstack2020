@@ -7,7 +7,7 @@ import BlogForm, { AddBlogForm } from '../BlogForm'
 const handleLogout = jest.fn()
 
 test ('blog calls callback function when created', () => {
-    const addBlog = jest.fn()
+  const addBlog = jest.fn()
   const component = render(
     <BlogForm handleLogout={handleLogout}/>
   )

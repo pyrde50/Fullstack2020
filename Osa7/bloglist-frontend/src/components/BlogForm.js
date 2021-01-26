@@ -45,7 +45,7 @@ const AddBlogForm = (props) => {
 }
 
 
-const BlogForm = (props) => {
+const BlogForm = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setURL] = useState('')
@@ -84,9 +84,6 @@ const BlogForm = (props) => {
   return (
     <div>
       <h2>blogs</h2>
-      {props.name} logged in <button onClick={props.handleLogout}>logout</button>
-      <br />
-      <br />
       <Togglable buttonLabel='create new Blog'>
         <AddBlogForm addBlog={addBlog} title={title} author={author} url={url} setTitle={setTitle} setURL={setURL} setAuthor={setAuthor}/>
       </Togglable>

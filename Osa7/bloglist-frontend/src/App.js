@@ -9,7 +9,14 @@ import Notification from './components/notification'
 import { useDispatch, useSelector } from 'react-redux'
 import { setErrorNotification } from './reducers/errorNotificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
-import { login, logoutUser } from './reducers/loginReducer'
+import { loginUseri, logoutUser } from './reducers/loginReducer'
+import Users from './components/Users'
+import  { initializeUsers } from './reducers/userReducer'
+import {
+  BrowserRouter as Router,
+  Switch, Route
+} from 'react-router-dom'
+import User from './components/User'
 
 
 const App = () => {
@@ -18,7 +25,7 @@ const App = () => {
   const [name, setName] = useState('')
   const dispatch = useDispatch()
   const blogit = useSelector(state => state.blogReducer)
-  const user = useSelector(state => state.user)
+  const login = useSelector(state => state.login)
 
 
   useEffect(() => {
@@ -26,9 +33,10 @@ const App = () => {
     if (maybeUser !== null) {
       setName(maybeUser.split(',')[2].split('"')[3])
       blogs.setToken(maybeUser.split(',')[0].split('"')[3])
-      dispatch(login(JSON.stringify(maybeUser)))
+      dispatch(loginUseri(JSON.stringify(maybeUser)))
     }
     dispatch(initializeBlogs())
+    dispatch(initializeUsers())
   }, [])
 
 
@@ -36,15 +44,15 @@ const App = () => {
     event.preventDefault()
 
     try {
-      const user = await loginUser.loginUser({
+      const loginNew = await loginUser.loginUser({
         username, password,
       })
-      setName(user.name)
-      blogs.setToken(user.token)
+      setName(loginNew.name)
+      blogs.setToken(loginNew.token)
       window.localStorage.setItem(
-        'user', JSON.stringify(user)
+        'user', JSON.stringify(loginNew)
       )
-      dispatch(login(JSON.stringify(user)))
+      dispatch(loginUseri(JSON.stringify(loginNew)))
       setUsername('')
       setPassword('')
 
@@ -63,15 +71,29 @@ const App = () => {
 
   return (
     <div>
-      <ErrorNotification/>
-      <Notification/>
-      {user === null ?
-        <LoginForm handleLogin={handleLogin} username={username} password={password} setUsername={setUsername} setPassword={setPassword} /> :
-        <BlogForm blogs={blogit} name={name} handleLogout={handleLogout} blogit={blogit} />}
-      {blogit !== undefined && user !== null?
-        blogit.sort((a, b) => b.likes - a.likes).map(blog =>
-          <Blog key={blog.id} blog={blog}/>
-        ): null}
+      <Router>
+        <ErrorNotification/>
+        <Notification/>
+        {login !== null ? <div><h1>blogs</h1>{name} has logged in <button onClick={handleLogout}>LogOut</button></div> : null}
+        {login === null ?
+          <LoginForm handleLogin={handleLogin} username={username} password={password} setUsername={setUsername} setPassword={setPassword} /> :
+          <Switch>
+            <Route path="/users/:id">
+              <User/>
+            </Route>
+            <Route path="/users">
+              <Users/>
+            </Route>
+            <Route path="/">
+              <BlogForm/>
+              {blogit !== undefined && login !== null?
+                blogit.sort((a, b) => b.likes - a.likes).map(blog =>
+                  <Blog key={blog.id} blog={blog}/>
+                ): null}
+            </Route>
+          </Switch>
+        }
+      </Router>
     </div>
   )
 
