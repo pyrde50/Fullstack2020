@@ -14,9 +14,12 @@ import Users from './components/Users'
 import  { initializeUsers } from './reducers/userReducer'
 import {
   BrowserRouter as Router,
-  Switch, Route
+  Switch, Route, Link
 } from 'react-router-dom'
 import User from './components/User'
+import SingleBlog from './components/SingleBlog'
+import Preview from './components/Preview'
+import './App.css'
 
 
 const App = () => {
@@ -33,7 +36,7 @@ const App = () => {
     if (maybeUser !== null) {
       setName(maybeUser.split(',')[2].split('"')[3])
       blogs.setToken(maybeUser.split(',')[0].split('"')[3])
-      dispatch(loginUseri(JSON.stringify(maybeUser)))
+      dispatch(loginUseri(maybeUser.split(',')[3].split('"')[3]))
     }
     dispatch(initializeBlogs())
     dispatch(initializeUsers())
@@ -72,9 +75,13 @@ const App = () => {
   return (
     <div>
       <Router>
+        <div className="App-menu">
+          <Link to='/blogs'>Blogs  </Link>
+          <Link to='/users'>Users  </Link>
+          <Preview name={name} handleLogout={handleLogout}/>
+        </div>
         <ErrorNotification/>
         <Notification/>
-        {login !== null ? <div><h1>blogs</h1>{name} has logged in <button onClick={handleLogout}>LogOut</button></div> : null}
         {login === null ?
           <LoginForm handleLogin={handleLogin} username={username} password={password} setUsername={setUsername} setPassword={setPassword} /> :
           <Switch>
@@ -83,6 +90,9 @@ const App = () => {
             </Route>
             <Route path="/users">
               <Users/>
+            </Route>
+            <Route path="/blogs/:id">
+              <SingleBlog/>
             </Route>
             <Route path="/">
               <BlogForm/>
