@@ -12,9 +12,11 @@ export const ALLAUTHORS = gql`
   export const ALLBOOKS = gql`
   query {
       allBooks {
-          title
-          author
-          published
+          title,
+          published,
+          author {
+              name 
+          },
       }
   }`
 
@@ -27,7 +29,9 @@ export const ALLAUTHORS = gql`
           genres: $genres
           ) {
             title
-            author
+            author {
+                name
+            }
             published
             genres
           }
