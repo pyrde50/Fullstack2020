@@ -151,16 +151,21 @@ const resolvers = {
         }
         try {
           const author = await Author.findOne({name: args.name })
+          console.log(author)
           if (!author) {
             return null
           }
           author.born = args.setBornTo
+
+          console.log(author)
           
             author.save()
+            return author
           } catch {
-            throw new Error
+            throw new UserInputError(error.message, {
+              invalidArgs: args,
+            })
           }
-          return author
           
       },
       createUser: (root, args) => {

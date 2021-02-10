@@ -10,7 +10,10 @@ const NewBook = (props) => {
   const [genres, setGenres] = useState([])
 
   const [ newBook ] = useMutation(ADDBOOK, {
-    refetchQueries: [  {query: ALLBOOKS}, {query: ALLAUTHORS} ]
+    refetchQueries: [  {query: ALLBOOKS}, {query: ALLAUTHORS} ],
+    onError: (error) => {
+      props.notify(error.graphQLErrors[0].message)
+    }
   })
 
   if (!props.show) {
@@ -25,7 +28,6 @@ const NewBook = (props) => {
 
   const published = parseInt(publish, 10)    
     newBook( {variables: {title: title, author: author, published: published, genres: genres}})
-    console.log('add book...')
 
     setTitle('')
     setPublished('')

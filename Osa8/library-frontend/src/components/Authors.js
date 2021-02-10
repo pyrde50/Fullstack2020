@@ -9,7 +9,19 @@ const Authors = (props) => {
   const [selectedOption, setSelectedOption] = useState(null)
 
   const [ editAuthor ] = useMutation(EDITAUTHOR, {
-    refetchQueries: [ {query: ALLAUTHORS} ]
+    onError: (error) => {
+      props.notify(error.graphQLErrors[0].message)
+    },
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: ALLAUTHORS })
+      store.writeQuery({
+        query: ALLAUTHORS,
+        data: {
+          ...dataInStore,
+          allAuthors: [ ...dataInStore.allAuthors.filter(author => response.data.editAuthor.name !== author.name), response.data.editAuthor ]
+        }
+      })
+    }
   })
 
   let options = []
@@ -27,7 +39,6 @@ const Authors = (props) => {
 
   const setBornTo = parseInt(born, 10)    
     editAuthor( {variables: {name: selectedOption.label, setBornTo: setBornTo}})
-    console.log('add book...')
 
     setBorn('')
   }
