@@ -82,8 +82,14 @@ const typeDefs = gql`
         password: String!
       ): Token
   }
+
+  type Subscription {
+    bookAdded: Book!
+  }
 `
 
+const { PubSub } = require('apollo-server')
+const pubsub = new PubSub()
 
 const resolvers = {
   Query: {
@@ -124,21 +130,21 @@ const resolvers = {
         }
         try {
         let author = await Author.findOne({name: args.author})
+        let book
         if (author) {
-            const book = new Book({...args, author: author})
+            book = new Book({...args, author: author})
             
               await book.save()
-            return book
         } else {
           const newAuthor = new Author({name: args.author})
           await newAuthor.save()
           const finalAuthor = await Author.findOne({name: args.author})
-          const book = new Book({...args,  author: finalAuthor})
+          book = new Book({...args,  author: finalAuthor})
           
             await book.save()
-            return book
-
       }
+      pubsub.publish('BOOK_ADDED', { bookAdded: book })
+      return book
     } catch (error) {
       throw new UserInputError(error.message, {
         invalidArgs: args,
@@ -192,21 +198,13 @@ const resolvers = {
     
         return { value: jwt.sign(userForToken, JWT_SECRET) }
       },
-    }
+    },
+    Subscription: {
+      bookAdded: {
+        subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
+      },
+    },
 }
-/*
-books.forEach(async book => {
-  const authors = await Author.find({})
-  const fin = new Book({
-    title: book.title,
-    author: authors.find(author => author.name === book.author)._id,
-    published: book.published,
-    genres: book.genres
-  })
-  console.log(fin)
-  fin.save()
-})
-*/
 
 const server = new ApolloServer({
   typeDefs,
@@ -224,6 +222,36 @@ const server = new ApolloServer({
   }
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })
+
+
+/*
+mutation {
+  createUser(username: "testeri", favoriteGenre: "Porno") {
+    username
+  }
+}
+
+mutation {
+  login(username: "testeri", password: "secret") {
+    value
+  }
+}
+
+
+
+
+
+
+
+mutation {
+  addBook(title: "joku", published:1999, author:"Jeesus", genres:["EIOLE"]){
+   title,
+    published
+  }
+}
+
+*/
