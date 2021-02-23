@@ -2,6 +2,7 @@
 import express from 'express';
 import patientService from '../services/patientService';
 import { NonSensitivePatientEntry } from '../types';
+import { toNewPatientEntry } from '../utils';
 
 const router = express.Router();
 
@@ -11,15 +12,14 @@ router.get('/', (_req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { name, ssn,  dateOfBirth, gender, occupation} = req.body;
-  const newDiaryEntry = patientService.addPatient({
-    name,
-    ssn,
-    dateOfBirth,
-    gender,
-    occupation
-  });
-  res.json(newDiaryEntry);
+  try {
+    const patientEntry = toNewPatientEntry(req.body);
+    const finalPatientEntry = patientService.addPatient(patientEntry);
+    res.json(finalPatientEntry);
+  } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    res.status(400).send(e.message);
+  }
 });
 
 router.get('/:id', (req, res) => {

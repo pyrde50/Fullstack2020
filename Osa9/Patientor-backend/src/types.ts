@@ -9,12 +9,18 @@ export interface DiagnoseType {
     latin?: string
   }
 
+  export enum Gender {
+    Male = "male",
+    Female = "female",
+    Other = "other"
+  }
+
   export interface PatientType {
       id: string, 
       name: string,
       dateOfBirth: string,
       ssn: string,
-      gender: string,
+      gender: Gender,
       occupation: string,
       entries: Entry[]
   }
@@ -23,7 +29,7 @@ export interface DiagnoseType {
     id: string, 
     name: string,
     dateOfBirth: string,
-    gender: string,
+    gender: Gender,
     occupation: string,
   }
 
