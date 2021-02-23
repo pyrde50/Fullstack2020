@@ -9,4 +9,16 @@ router.get('/', (_req, res) => {
   res.json(patients);
 });
 
+router.post('/', (req, res) => {
+  const { name, ssn,  dateOfBirth, gender, occupation} = req.body;
+  const newDiaryEntry = patientService.addPatient({
+    name,
+    ssn,
+    dateOfBirth,
+    gender,
+    occupation
+  });
+  res.json(newDiaryEntry);
+})
+
 export default router;
