@@ -22,12 +22,19 @@ const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
 const addPatient = (object: NewPatientEntry): PatientType => {
   return {
     id: id,
+    entries: [],
     ...object
-  }
-}
+  };
+};
+
+const findById = (id: string): PatientType | undefined => {
+  const patient = patients.find(a => a.id === id);
+  return patient;
+};
 
 export default {
   getEntries,
   getNonSensitiveEntries,
-  addPatient
+  addPatient,
+  findById
 };
