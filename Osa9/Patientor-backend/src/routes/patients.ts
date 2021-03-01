@@ -2,7 +2,7 @@
 import express from 'express';
 import patientService from '../services/patientService';
 import { NonSensitivePatientEntry } from '../types';
-import { toNewPatientEntry } from '../utils';
+import { patientEntry, toNewPatientEntry } from '../utils';
 
 const router = express.Router();
 
@@ -29,6 +29,23 @@ router.get('/:id', (req, res) => {
   } else {
     res.sendStatus(404);
   }
+});
+
+router.post('/:id', (req, res) => {
+  try {
+    const patient = patientService.findById(req.params.id);
+    const entry = req.body;
+    if (!patient) {
+      throw new Error('patient not found');
+    }
+    const checkEntry = patientEntry(entry);
+    const finalEntry = patientService.addEntry(checkEntry, patient);
+    console.log(finalEntry);
+    res.send(finalEntry);
+  } catch (e) {
+    res.sendStatus(404);
+  }
+  
 });
 
 export default router;
